@@ -47,7 +47,7 @@ class VAR(nn.Module):
         
         self.num_stages_minus_1 = len(self.patch_nums) - 1
         self.rng = torch.Generator(device=dist.get_device())
-        
+
         # 1. input (word) embedding
         quant: VectorQuantizer2 = vae_local.quantize
         self.vae_proxy: Tuple[VQVAE] = (vae_local,)
@@ -128,6 +128,7 @@ class VAR(nn.Module):
         self, B: int, label_B: Optional[Union[int, torch.LongTensor]],
         g_seed: Optional[int] = None, cfg=1.5, top_k=0, top_p=0.0,
         more_smooth=False,
+        dropout_layer: int = 0,
     ) -> torch.Tensor:   # returns reconstructed image (B, 3, H, W) in [0, 1]
         """
         only used for inference, on autoregressive mode
@@ -157,7 +158,7 @@ class VAR(nn.Module):
         f_hat = sos.new_zeros(B, self.Cvae, self.patch_nums[-1], self.patch_nums[-1])
         
         for b in self.blocks: b.attn.kv_caching(True)
-        for si, pn in enumerate(self.patch_nums):   # si: i-th segment
+        for si, pn in enumerate(self.patch_nums[:-dropout_layer] if dropout_layer else self.patch_nums):   # si: i-th segment
             ratio = si / self.num_stages_minus_1
             # last_L = cur_L
             cur_L += pn*pn
