@@ -38,5 +38,6 @@ class sample:
 		self.patch_nums = patch_nums
 		self.device = device
 	
-	def sample(self,input,mode='final'):
-		recon_B3HW = self.var.autoregressive_infer_cfg(B=1, label_B=input, cfg=4, top_k=900, top_p=0.95)
+	def sample(self,input,mode='final'): # to numpy
+		recon = self.var.autoregressive_infer_cfg(B=1, label_B=input, cfg=4, top_k=900, top_p=0.95)[0]
+		return recon.permute(1,2,0).cpu().numpy()
