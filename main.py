@@ -19,7 +19,7 @@ vae_ckpt, var_ckpt = 'vae_ch160v4096z32.pth', f'var_d{MODEL_DEPTH}.pth'
 if not osp.exists(vae_ckpt): os.system(f'wget {hf_home}/{vae_ckpt}')
 if not osp.exists(var_ckpt): os.system(f'wget {hf_home}/{var_ckpt}')
 
-var_ckpt='var16_finetune.pth'
+var_ckpt='var16_finetune_1500.pth'
 # var_ckpt='var16_finetune.pth'
 
 # build vae, var
@@ -48,7 +48,7 @@ torch.manual_seed(seed)
 num_sampling_steps = 250 #@param {type:"slider", min:0, max:1000, step:1}
 cfg = 4 #@param {type:"slider", min:1, max:10, step:0.1}
 # class_labels = (980, 980, 437, 437, 22, 22, 562, 562)  #@param {type:"raw"}
-class_labels = [0 for i in range(8)]  #@param {type:"raw"}
+class_labels = [0,1]*4  #@param {type:"raw"}
 # print(class_labels)
 more_smooth = False # True for more smooth output
 

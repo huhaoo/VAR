@@ -20,3 +20,6 @@ local_output*
 *.ipynb
 *.png
 nohup.out
+*.xml
+*.zip
+*.csv
