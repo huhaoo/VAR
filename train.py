@@ -181,7 +181,7 @@ def main_training():
     ) = build_everything(args)
     
     # wandb
-    wandb.init(project="VAR", config=args.__dict__, name=args.exp_name if hasattr(args, "exp_name") else None)
+    wandb.init(project="VAR", config=args.__dict__, name=args.exp_name if hasattr(args, "exp_name") and args.exp_name!="" else time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime(time.time())))
 
     # train
     start_time = time.time()
@@ -321,6 +321,33 @@ def train_one_ep(ep: int, is_first_ep: bool, start_it: int, args: arg_util.Args,
             tb_lg.update(head='AR_opt_grad/grad', grad_norm=grad_norm)
             tb_lg.update(head='AR_opt_grad/grad', grad_clip=args.tclip)
     
+    if (ep)%20==0:
+        import torchvision.transforms as T
+
+        to_pil = T.ToPILImage()
+
+        original_img = inp[0].detach().cpu() 
+
+
+        with torch.no_grad():
+            recon_img = trainer.vae_local.img_to_reconstructed_img(inp[0:1])#.squeeze(0).detach().cpu()
+
+        img_pil = to_pil(torch.clamp(original_img, 0, 1))
+
+        wandb.log({
+            f"Visualization/Epoch_{ep+1}": [
+                wandb.Image(img_pil, caption="Original"),
+            ]
+            +[
+                wandb.Image(to_pil(torch.clamp(x.squeeze(0).detach().cpu(), 0, 1)), caption=f"Reconstructed Step{idx}") for idx, x in enumerate(recon_img)
+            ]
+        }, step=ep + 1)
+        
+#         img_pil.save("img.png")
+#         recon_pil.save("recon.png")
+# 
+#         exit(0)
+
     me.synchronize_between_processes()
     return {k: meter.global_avg for k, meter in me.meters.items()}, me.iter_time.time_preds(max_it - (g_it + 1) + (args.ep - ep) * 15)  # +15: other cost
 

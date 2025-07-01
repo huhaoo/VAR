@@ -24,7 +24,7 @@ import dist
 
 class Args(Tap):
     data_path: str = '/path/to/imagenet'
-    exp_name: str = 'text'
+    exp_name: str = ''
     
     # VAE
     vfast: int = 0      # torch.compile VAE; =0: not compile; 1: compile with 'reduce-overhead'; 2: compile with 'max-autotune'

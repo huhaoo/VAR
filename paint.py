@@ -36,6 +36,7 @@ if __name__ == "__main__":
     n= 256
     m= 16
     generate_grid_image(n=n, m=m, save_path=f'grid_{n}_{m}.png', dft=True)
-    for m in range(16,17):
+    for m in range(19,20):
         for id in range(256):
+            # generate_grid_image(n=n, m=m, save_path=f'data/train/class0/grid_{n}_{m}_{id}.png')
             generate_grid_image(n=n, m=m, shift=[random.randint(0,m-1),random.randint(0,m-1)], save_path=f'data/train/class0/grid_{n}_{m}_{id}.png')

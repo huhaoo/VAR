@@ -19,8 +19,8 @@ vae_ckpt, var_ckpt = 'vae_ch160v4096z32.pth', f'var_d{MODEL_DEPTH}.pth'
 if not osp.exists(vae_ckpt): os.system(f'wget {hf_home}/{vae_ckpt}')
 if not osp.exists(var_ckpt): os.system(f'wget {hf_home}/{var_ckpt}')
 
-var_ckpt='var16_finetune_1500.pth'
-# var_ckpt='var16_finetune.pth'
+# var_ckpt='var16_finetune_1500.pth'
+var_ckpt='var16_finetune_16x16.pth'
 
 # build vae, var
 patch_nums = (1, 2, 3, 4, 5, 6, 8, 10, 13, 16)
